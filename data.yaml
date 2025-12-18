@@ -1,0 +1,8 @@
+path: data/yolo #ana path bu digerleri zaten bunun altinda 
+
+train: images/train
+val: images/val
+test: images/test  # opsiyonel ama iyi dursun
+
+names:
+  0: plate

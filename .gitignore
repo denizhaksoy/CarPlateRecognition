@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Dataset / large files (isteğe bağlı)
+data/
