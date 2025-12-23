@@ -147,15 +147,14 @@ All scripts required for training, inference, and evaluation are included in src
 
 ---
 
-## Limitations
+## Limitations And Discussion
 
-- Low-resolution plate crops
-- Character ambiguity
-- CPU-only training
-- Limited dataset size
+Although the OCR module is fully integrated and produces predictions for all test samples, no exact license plate matches were observed on the UFPR-ALPR dataset. This is primarily due to severe motion blur, low resolution, and strong domain mismatch between real-world license plate imagery and the TrOCR model’s pretraining data, which is focused on clean document text.
 
+These results highlight the inherent difficulty of OCR in unconstrained traffic scenarios and demonstrate that, while the end-to-end ALPR pipeline is functional, robust license plate recognition requires domain-specific OCR architectures, higher-resolution crops, or additional temporal and contextual modeling.
 ---
 
 ## License
 
 Academic and educational use only.
+
