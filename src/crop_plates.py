@@ -2,6 +2,7 @@ from ultralytics import YOLO
 from pathlib import Path
 import cv2
 import os
+import re
 
 MODEL_PATH = "runs_cpu/exp_main/weights/best.pt"   
 RAW_ROOT = Path("data/raw/UFPR-ALPR")             
@@ -13,9 +14,13 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 def extract_plate_text(annotation_path: Path):
     with open(annotation_path, "r", encoding="utf-8", errors="ignore") as f:
         for line in f:
+
             if "plate:" in line:
                 plate = line.split("plate:")[1].strip()
                 return plate
+            m = re.search(r"\bplate:\s*([A-Za-z0-9\-]+)", line)
+            if m:
+                return m.group(1).replace("-", "").upper()
     return None
 
 
