@@ -1,0 +1,9 @@
+OCR Inference Results
+---------------------
+- Model: TrOCR (fine-tuned on UFPR-ALPR crops)
+- Beam size: 5
+- Input images: samples/inputs
+- Predictions: preds.csv
+
+Note:
+Full training checkpoints are excluded from GitHub due to size limits.
