@@ -1,24 +1,20 @@
-from pathlib import Path #data/ocr_dataset olusturan script
+from pathlib import Path 
 import csv
 
-# Cropların bulunduğu ana klasör
 CROPS_ROOT = Path("data/crops")
 
-# UFPR split adlarını OCR split isimlerine map ediyoruz
 SPLITS = {
     "training": "train",
     "validation": "val",
     "testing": "test",
 }
 
-# Çıkacak CSV dosyasının yolu
 OUT_PATH = Path("data/ocr_dataset.csv")
 
 
 def main():
     with OUT_PATH.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        # Header satırı
         writer.writerow(["split", "image_path", "text"])
 
         for ufpr_split, split_name in SPLITS.items():
@@ -28,23 +24,18 @@ def main():
                 continue
 
             count = 0
-            # Her split altındaki tüm .png crop'ları tara
             for img_path in split_dir.glob("*.png"):
-                # Örnek isim: AAW9529_track0020[01]_0.png
-                stem = img_path.stem  # "AAW9529_track0020[01]_0"
-                plate_text = stem.split("_")[0]  # "AAW9529"
+                stem = img_path.stem
+                plate_text = stem.split("_")[0] 
 
                 writer.writerow([
-                    split_name,              # train / val / test
-                    img_path.as_posix(),     # "data/crops/..." şeklinde path
-                    plate_text,              # plaka stringi
+                    split_name,              
+                    img_path.as_posix(),   
+                    plate_text,              
                 ])
                 count += 1
 
-            print(f"[INFO] {ufpr_split}: {count} crops eklendi.")
-
-    print(f"[DONE] CSV kaydedildi: {OUT_PATH.resolve()}")
-
+            print(f"[INFO] {ufpr_split}: {count} crops")
 
 if __name__ == "__main__":
     main()

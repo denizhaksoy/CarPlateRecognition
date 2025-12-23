@@ -1,6 +1,6 @@
 from pathlib import Path
 
-RAW_ROOT = Path("data/raw/UFPR-ALPR")  # klasör adını nasıl değiştirdiysen ona göre düzenle
+RAW_ROOT = Path("data/raw/UFPR-ALPR")  
 
 def main():
     count = 0
@@ -17,15 +17,15 @@ def main():
             with open(txt_path, "r", encoding="utf-8", errors="ignore") as f:
                 for i, line in enumerate(f):
                     print(f"  {i:02d}: {line.rstrip()}")
-                    if i >= 7:  # ilk 8 satır yeter
+                    if i >= 7: 
                         break
 
             count += 1
-            if count >= 3:   # 3 örnek yeter
+            if count >= 3:  
                 break
 
     if count == 0:
-        print("Hiç image+txt çifti bulunamadı, RAW_ROOT yolunu kontrol et.")
+        print("0")
 
 if __name__ == "__main__":
     main()
