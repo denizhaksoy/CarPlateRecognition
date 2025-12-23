@@ -3,8 +3,8 @@
 This repository contains an end-to-end **Automatic License Plate Recognition (ALPR)** system developed as an **academic project**.
 
 The system follows a two-stage deep learning pipeline:
-1. **License Plate Detection** using YOLO  
-2. **License Plate Text Recognition (OCR)** using TrOCR  
+1. **License Plate Detection** using YOLOv8
+2. **License Plate Text Recognition (OCR)** using TrOCR
 
 The project is designed to be **modular, reproducible, and suitable for academic evaluation**.
 
@@ -14,10 +14,10 @@ The project is designed to be **modular, reproducible, and suitable for academic
 
 Automatic License Plate Recognition (ALPR) is a core task in intelligent transportation systems.
 This project implements a complete ALPR pipeline that operates under challenging real-world conditions such as:
-- motion blur  
-- low resolution  
-- character ambiguity  
-- real driving scenarios  
+- motion blur
+- low resolution
+- character ambiguity
+- real driving scenarios
 
 The **UFPR-ALPR dataset** is used due to its realistic nature and high difficulty.
 
@@ -32,160 +32,130 @@ The **UFPR-ALPR dataset** is used due to its realistic nature and high difficult
 
 The original dataset splits are preserved to **avoid data leakage**.
 
-> Note: The raw dataset is not included in this repository due to size constraints.
+Note: The raw dataset is not included in this repository due to size constraints.
 
 ---
 
 ## System Architecture
 
-Pipeline overview:
-
-```
 Raw Image
- → YOLO Plate Detection
- → Plate Cropping
- → OCR Dataset (CSV)
- → TrOCR Training / Inference
- → Text Prediction & Evaluation
-```
+→ YOLOv8 License Plate Detection
+→ Plate Cropping
+→ OCR Dataset (CSV)
+→ TrOCR Training / Inference
+→ Text Prediction & Evaluation
 
 ---
 
 ## Repository Structure
 
-```
 .
 ├── src/                     Source code (training, inference, evaluation)
 ├── samples/
 │   └── inputs/              Sample license plate images (qualitative examples)
 ├── results/
 │   ├── preds.csv            OCR predictions for sample images
-│   └── eval_summary.txt     Short evaluation summary
+│   └── eval_summary.txt     Evaluation summary and detection metrics
 ├── runs/
-│   └── detect/train/        YOLO training outputs
+│   └── detect/train/        YOLOv8 training outputs
 ├── data.yaml                YOLO dataset configuration
+├── yolov8n.pt               Pretrained YOLOv8n weights
 ├── README.md
 └── .gitignore
-```
 
-Large training artifacts are intentionally excluded (see below).
+Large training artifacts are intentionally excluded.
 
 ---
 
-## License Plate Detection (YOLO)
+## License Plate Detection (YOLOv8)
 
-YOLO is trained as a **single-class detector** (license plate).
-Bounding boxes are derived from UFPR corner annotations.
+License plate detection is performed using the **Ultralytics YOLOv8 framework**.
+A pretrained **YOLOv8n** model is fine-tuned as a **single-class detector** (license plate).
 
-**Training**
-```bash
+Bounding box annotations are generated from corner coordinates provided by the UFPR-ALPR dataset
+and converted to YOLO format.
+
+Training:
 python src/train_yolo.py
-```
 
-**Output**
-```
+Output:
 runs/detect/train/weights/best.pt
-```
+
+---
+
+## Detection Results
+
+Precision: 0.91
+Recall: 0.88
+mAP@0.5: 0.95
+mAP@0.5:0.95: 0.56
 
 ---
 
 ## Plate Cropping
 
-Detected plates are cropped from original images using YOLO predictions and saved by dataset split.
-
-```bash
 python src/crop_plates.py
-```
 
 ---
 
 ## OCR Dataset Construction
 
-Cropped plates are linked with ground-truth text in a CSV file.
-
-**CSV format**
-```
+CSV format:
 image_path,text,split
-```
 
 ---
 
 ## OCR Model (TrOCR)
 
-**Base model**
-```
+Base model:
 microsoft/trocr-small-printed
-```
 
-**Training**
-```bash
+Training:
 python src/train_trocr.py
-```
 
-Training produces large checkpoint files which are **not included** in this repository.
+Large checkpoints are excluded due to GitHub size limits.
 
 ---
 
 ## OCR Inference
 
-OCR inference is performed on a **single image**:
-
-```bash
 python src/ocr_infer.py --model_dir PATH_TO_MODEL --image PATH_TO_IMAGE --beam 5
-```
 
 ---
 
 ## Evaluation
 
-The OCR module is evaluated using:
-- Exact Match
-- Normalized Exact Match
-- Character Error Rate (CER)
+Exact Match Accuracy
+Normalized Exact Match Accuracy
+Character Error Rate (CER)
 
-```bash
 python src/eval_ocr.py --model_dir PATH_TO_MODEL --split test
-```
 
 ---
 
-## Results (Evidence for Evaluation)
+## Results and Evidence
 
-Due to GitHub size limitations, **full training artifacts (checkpoints, optimizer states)** are excluded.
-
-Instead, this repository provides **verifiable evidence** through:
-- **Sample input images**: `samples/inputs/`
-- **OCR predictions**: `results/preds.csv`
-- **Evaluation summary**: `results/eval_summary.txt`
-
-This allows instructors to verify that the model was trained and produces valid outputs,
-while keeping the repository lightweight and manageable.
+- Sample input images: samples/inputs/
+- OCR predictions: results/preds.csv
+- Evaluation summary: results/eval_summary.txt
 
 ---
 
 ## Reproducibility
 
-All scripts required to:
-- train the detector
-- crop license plates
-- build the OCR dataset
-- train and evaluate TrOCR  
-
-are included in the `src/` directory.
-
-Given the same dataset and configurations, the results can be reproduced.
+All scripts required for training, inference, and evaluation are included in src/.
 
 ---
 
 ## Limitations
 
-- OCR accuracy is affected by low-resolution plate crops
-- Strong character ambiguity (e.g., O/0, B/8)
-- CPU-only training constraints
-- Limited training data
+- Low-resolution plate crops
+- Character ambiguity
+- CPU-only training
+- Limited dataset size
 
 ---
 
 ## License
 
-This repository is intended for **academic and educational use only**.
+Academic and educational use only.
